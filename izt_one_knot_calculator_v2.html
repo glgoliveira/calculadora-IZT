@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Calculadora IZT – Modelo 1 Nó</title>
+<style>
+  body {font-family: Arial, sans-serif; background:#f5f5f5; margin:0; padding:2rem; display:flex; justify-content:center}
+  .box {background:#fff; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,.15); padding:2rem; max-width:420px; width:100%}
+  h1 {color:#004d80; margin-top:0}
+  label {display:block; margin-bottom:.35rem}
+  input {width:100%; padding:.5rem; border:1px solid #ccc; border-radius:6px; margin-bottom:1rem; font-size:1rem}
+  button {background:#004d80; color:#fff; border:0; padding:.6rem 1.2rem; border-radius:6px; font-size:1rem; cursor:pointer}
+  button:hover {opacity:.9}
+  #resultado {margin-top:1rem; font-weight:bold; font-size:1.2rem}
+</style>
+</head>
+<body>
+  <div class="box">
+    <h1>Calculadora IZT (1 nó)</h1>
+
+    <label for="vtp">Volume total da próstata (mL)</label>
+    <input id="vtp" type="number" placeholder="Ex.: 120" />
+
+    <label for="idade">Idade (anos)</label>
+    <input id="idade" type="number" placeholder="Ex.: 65" />
+
+    <button id="calcular">Calcular IZT</button>
+    <div id="resultado"></div>
+  </div>
+
+<script>
+  /* Modelo segmentado de 1 nó: ponto de corte em 91 mL */
+  const b0   = 0.1773;
+  const bAge = 0.0014;
+  const beta1 = 0.0045;   // até 91 mL
+  const beta2 = -0.0033;  // variação de slope acima do nó
+  const knot  = 91;
+
+  function iztPred(vtp, idade) {
+    const s1 = Math.min(vtp, knot);         // parte antes do nó
+    const s2 = Math.max(0, vtp - knot);     // parte depois do nó
+    const izt = b0 + bAge * idade + beta1 * s1 + beta2 * s2;
+    return Math.max(0, Math.min(1, izt));   // restringe a [0,1]
+  }
+
+  document.getElementById('calcular').addEventListener('click', () => {
+    const vtp   = parseFloat(document.getElementById('vtp').value);
+    const idade = parseFloat(document.getElementById('idade').value);
+
+    if (isNaN(vtp) || isNaN(idade)) {
+      document.getElementById('resultado').textContent = 'Preencha VTP e Idade.';
+      return;
+    }
+    const izt = iztPred(vtp, idade).toFixed(3);
+    document.getElementById('resultado').textContent = `IZT previsto: ${izt}`;
+  });
+</script>
+</body>
+</html>
