@@ -74,17 +74,16 @@
   </div>
 
   <script>
-    function iztPred(vtp, idade) {
-      const b0 = 0.1773;
-      const bAge = 0.0014;
-      const beta1 = 0.0045;
-      const beta2 = -0.0033;
-      const knot = 91;
-      const s1 = Math.min(vtp, knot);
-      const s2 = Math.max(0, vtp - knot);
-      return Math.max(0, Math.min(1, b0 + bAge * idade + beta1 * s1 + beta2 * s2));
-    }
-
+function iztPred(vtp, idade) {
+    const b0 = 0.1773;
+    const bAge = 0.0014;
+    const beta1 = 0.0045;
+    const beta2 = -0.0033;
+    const knot = 91;
+    const s1 = Math.min(vtp, knot);
+    const s2 = Math.max(0, vtp - knot);
+return Math.max(0, Math.min(1, b0 + bAge * idade + beta1 * s1 + beta2 * s2));
+  } 
     document.getElementById('calcular').addEventListener('click', () => {
       const vtp = parseFloat(document.getElementById('vtp').value);
       const idade = parseFloat(document.getElementById('idade').value);
